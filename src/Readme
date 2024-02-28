@@ -1,0 +1,9 @@
+> nest new app name
+
+> nest g resource person
+
+or
+---
+> nest g module person
+> nest g controller person --no-spec
+> nest g service person --no-spec
