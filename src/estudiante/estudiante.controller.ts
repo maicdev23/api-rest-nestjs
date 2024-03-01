@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { EstudianteService } from './estudiante.service';
 
-@Controller('user')
+@Controller('estudiante')
 export class EstudianteController {
 
     constructor(private estudianteService: EstudianteService) { }
@@ -13,7 +13,7 @@ export class EstudianteController {
 
     @Post()
     addUser(@Body() newUser: any) {
-        return this.estudianteService.save(newUser.name)
+        return this.estudianteService.create(newUser.name)
     }
 
     @Get(':id')
@@ -23,6 +23,6 @@ export class EstudianteController {
 
     @Delete(':id')
     deleteUser(@Param('id') id: string) {
-        return this.estudianteService.removeOne(id)
+        return this.estudianteService.remove(id)
     }
 }

@@ -14,7 +14,7 @@ export class EstudianteService {
         }
     ]
 
-    save(name: string) {
+    create(name: string) {
         const user = {
             id: new Date().toISOString(), name,
         }; 
@@ -30,7 +30,7 @@ export class EstudianteService {
         return this.users.find(user => user.id === id);
     }
 
-    removeOne(id: string){
+    remove(id: string){
         this.users = this.users.filter(user => user.id !== id)
         return { msg: `User deleted successfully` };
     }
