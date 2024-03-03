@@ -3,6 +3,11 @@ import { EstudianteModule } from './estudiante/estudiante';
 import { UsersModule } from './users/users.module';
 
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProfileModule } from './profile/profile.module';
+
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 @Module({
   imports: [
@@ -10,18 +15,21 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
     TypeOrmModule.forRoot(
       {
-        type: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'root',
-        password: '',
-        database: 'service_rest',
+        type: 'postgres',
+        host: process.env.DB_HOST,
+        username: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME,
+        port: 5432,
+        ssl: true,
         autoLoadEntities: true,
         synchronize: true,
       }
     ),
 
-    UsersModule
+    UsersModule,
+
+    ProfileModule
   ],
   controllers: [],
   providers: [],

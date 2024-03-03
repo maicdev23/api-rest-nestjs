@@ -14,7 +14,8 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    return await this.userRepository.save(createUserDto)
+    await this.userRepository.save(createUserDto)
+    return { msg: `User ${createUserDto.username} created successfully`}
   }
 
   async findAll() {
@@ -26,10 +27,12 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.userRepository.update(id, updateUserDto)
+    await this.userRepository.update(id, updateUserDto)
+    return { msg: `User ${updateUserDto.username} updated successfully`}
   }
 
   async remove(id: number) {
-    return await this.userRepository.delete(id)
+    await this.userRepository.delete(id)
+    return { msg: `User ${id} deleted successfully`}
   }
 }

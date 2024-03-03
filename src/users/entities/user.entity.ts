@@ -1,14 +1,19 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Profile } from "src/profile/entities/profile.entity";
+import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 
-@Entity({ name: 'usuario'})
+@Entity({ name: 'usuario' })
 export class User {
 
     @Column({primary: true, generated: true})
     id: number;
 
-    @Column()
-    name: string;
+    @Column({unique: true})
+    username: string;
 
-    @Column({ unique: true })
-    email: string;
+    @Column()
+    password: string;
+
+    @OneToOne(() => Profile, { eager: true })
+    @JoinColumn()
+    profile: Profile;
 }
