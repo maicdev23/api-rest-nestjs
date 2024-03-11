@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProfileModule } from './profile/profile.module';
+import { PostsModule } from './posts/posts.module';
 
 import * as dotenv from 'dotenv'
 
@@ -29,7 +30,9 @@ dotenv.config()
 
     UsersModule,
 
-    ProfileModule
+    ProfileModule,
+
+    PostsModule
   ],
   controllers: [],
   providers: [],
