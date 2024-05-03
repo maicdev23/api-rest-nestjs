@@ -16,6 +16,6 @@ export class Post {
     @Column()
     authorId: number;
 
-    @ManyToOne(() => User, user => user.posts)
+    @ManyToOne(() => User, (user) => user.posts)
     author: User;
 }

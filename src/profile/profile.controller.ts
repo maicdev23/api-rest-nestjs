@@ -6,9 +6,11 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 @Controller('profile')
 export class ProfileController {
   
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(
+    private readonly profileService: ProfileService
+  ) {}
 
-  @Post('user/:id')
+  @Post(':id')
   create(
     @Param('id') id: number,
     @Body() createProfileDto: CreateProfileDto) {

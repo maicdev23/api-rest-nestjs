@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,37 +10,47 @@ import { User } from 'src/users/entities/user.entity';
 export class ProfileService {
 
   constructor(
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
   async create(id: number, createProfileDto: CreateProfileDto) {
-    const user = await this.userRepository.findOneBy({id})
+    const user = await this.userRepository.findOneBy({id})    
     
-    if(!user) return new Error(`User ${id} not found`)
+    if(!user) throw new BadRequestException('Post not found')
 
     const saveProfile = await this.profileRepository.save(createProfileDto)
     user.profile = saveProfile
-    this.userRepository.save(user)
+    await this.userRepository.save(user)
 
     return { msg: `User profile created successfully`}
   }
 
   async findAll() {
-    return this.profileRepository.find();
+    return await this.profileRepository.find();
   }
 
-  findOne(id: number) {
-    return this.profileRepository.findOneBy({id});
+  async findOne(id: number) {
+    const userFound = await this.profileRepository.findOneBy({id});
+      
+    if(!userFound) throw new BadRequestException('Profile not found')
+      
+    return userFound
   }
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {
-    await this.profileRepository.update(id, updateProfileDto)
+    const result = await this.profileRepository.update(id, updateProfileDto)
+      
+    if(result.affected === 0) return { msg: 'User profile not updated'}
+
     return { msg: `User profile updated successfully`}
   }
 
   async remove(id: number) {
-    await this.profileRepository.delete(id)
-    return { msg: `User profile deleted successfully`}
+    const response = await this.profileRepository.delete(id)
+      
+    if(response.affected === 0) return { msg: 'User profile not removed' }
+    
+    return { msg: `User profile removed successfully`}
   }
 }

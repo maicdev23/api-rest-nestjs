@@ -6,7 +6,7 @@ export class Profile {
     @Column({primary: true, generated: true})
     id: number;
 
-    @Column()
+    @Column({nullable: false})
     fullname: string;
 
     @Column()

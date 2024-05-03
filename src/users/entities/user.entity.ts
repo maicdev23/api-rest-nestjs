@@ -8,16 +8,16 @@ export class User {
     @Column({primary: true, generated: true})
     id: number;
 
-    @Column({unique: true})
+    @Column({nullable: false, unique: true})
     username: string;
 
-    @Column()
+    @Column({nullable: false})
     password: string;
 
     @OneToOne(() => Profile, { eager: true })
     @JoinColumn()
     profile: Profile;
 
-    @OneToMany(() => Post, post => post.author)
+    @OneToMany(() => Post, (post) => post.author)
     posts: Post[];
 }

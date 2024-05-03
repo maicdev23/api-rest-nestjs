@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-export class User { // se podria exportar como una entity
+export class User {
     id: String; name: String;
 }
 
