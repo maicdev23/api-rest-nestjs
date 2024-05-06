@@ -1,3 +1,4 @@
+import { Role } from "src/common/enums/role.enum";
 import { Post } from "src/posts/entities/post.entity";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
@@ -11,13 +12,16 @@ export class User {
     @Column({nullable: false, unique: true})
     username: string;
 
-    @Column({nullable: false})
+    @Column({nullable: false, select: false})
     password: string;
+
+    @Column({enum: Role, default: Role.USER})
+    role: Role;
 
     @OneToOne(() => Profile, { eager: true })
     @JoinColumn()
     profile: Profile;
 
-    @OneToMany(() => Post, (post) => post.author)
+    @OneToMany(() => Post, (post) => post.user)
     posts: Post[];
 }

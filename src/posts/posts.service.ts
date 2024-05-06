@@ -4,7 +4,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
-import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -12,43 +12,45 @@ export class PostsService {
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
 
-    private usersService: UsersService
-  ) {}
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) { }
 
   async create(createPostDto: CreatePostDto) {
-    const userFound = await this.usersService.findOne(createPostDto.authorId)
 
-    if(!userFound) throw new BadRequestException('User not found')
+    const user = await this.userRepository.findOneBy({ id: createPostDto.user })
 
-    this.postsRepository.save(createPostDto)
-    return { msg: `Post created successfully`}
+    if (!user) throw new BadRequestException('User not found')
+
+    return await this.postsRepository.save({ ...createPostDto, user })
   }
 
   async findAll() {
-    return await this.postsRepository.find(); //{ relations: ['author']}}
+    return await this.postsRepository.find(); //{ relations: ['user'] }
   }
 
   async findOne(id: number) {
-    const userFound = await this.postsRepository.findOneBy({id})
-    
-    if(!userFound) throw new BadRequestException('Post not found')
+    const userFound = await this.postsRepository.findOneBy({ id })
+
+    if (!userFound) throw new BadRequestException('Post not found')
 
     return userFound
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    const result = await this.postsRepository.update(id, updatePostDto)
+    const post = await this.postsRepository.findOneBy({ id })
 
-    if(result.affected === 0) return { msg: 'Post not updated'}
+    if (!post) throw new BadRequestException('Post not found')
 
-    return { msg: `Post updated successfully`}
+    await this.postsRepository.update(id, { context: updatePostDto.context })
+
+    return { msg: `Post updated successfully` }
   }
 
   async remove(id: number) {
     const result = await this.postsRepository.delete(id)
 
-    if(result.affected === 0) return { msg: 'Post not removed'}
-    
+    if (result.affected === 0) throw new BadRequestException('Post not removed')
+
     return { msg: `Post deleted successfully` };
   }
 }

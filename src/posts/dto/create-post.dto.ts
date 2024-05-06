@@ -3,11 +3,9 @@ import { IsNumber, IsString } from "class-validator";
 export class CreatePostDto {
 
     @IsString()
-    title: string;
-
-    @IsString()
-    description: string;
+    context: string;
 
     @IsNumber()
-    authorId: number;
+    user: number;
+
 }

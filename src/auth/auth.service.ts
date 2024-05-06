@@ -11,17 +11,17 @@ export class AuthService {
     constructor(
         private readonly userService: UsersService,
         private readonly jwtService: JwtService
-    ) {}
+    ) { }
 
-    async login({ username, password }: LoginDTO){
-        const user = await this.userService.findOneByEmail(username)
+    async login({ username, password }: LoginDTO) {
+        const user = await this.userService.findOneByUsername(username)
 
-        if(!user) throw new UnauthorizedException('Invalid credentials')
+        if (!user) throw new UnauthorizedException('Invalid credentials')
 
         const match = await compare(password, user.password)
-        if(!match) throw new UnauthorizedException('Invalid credentials')
+        if (!match) throw new UnauthorizedException('Invalid credentials')
 
-        const payload = { username: user.username }
+        const payload = { userId: user.id, role: user.role }
 
         const token = await this.jwtService.signAsync(payload)
 

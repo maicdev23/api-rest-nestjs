@@ -52,7 +52,11 @@ export class UsersService {
     return { msg: `User ${id} removed successfully`}
   }
 
-  async findOneByEmail(username: string) {
-    return await this.userRepository.findOneBy({ username });
+  async findOneByUsername(username: string) {
+    //return await this.userRepository.findOneBy({ username });
+    return this.userRepository.findOne({
+      where: { username },
+      select: ['id', 'username', 'password', 'role']
+    })
   }
 }

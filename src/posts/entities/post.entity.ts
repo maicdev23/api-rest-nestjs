@@ -8,14 +8,9 @@ export class Post {
     id: number;
 
     @Column()
-    title: string;
+    context: string;
 
-    @Column()
-    description: string;
-
-    @Column()
-    authorId: number;
-
-    @ManyToOne(() => User, (user) => user.posts)
-    author: User;
+    @ManyToOne(() => User, (user) => user.id)
+    user: User;
+    
 }
