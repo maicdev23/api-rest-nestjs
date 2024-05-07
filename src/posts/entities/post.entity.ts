@@ -1,7 +1,8 @@
+import { Tipo } from "src/tipo/entities/tipo.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: 'post'})
+@Entity({ name: 'post' })
 export class Post {
 
     @PrimaryGeneratedColumn()
@@ -10,7 +11,14 @@ export class Post {
     @Column()
     context: string;
 
-    @ManyToOne(() => User, (user) => user.id)
-    user: User;
-    
+    @ManyToOne(() => Tipo, (tipo) => tipo.id)
+    tipo: Tipo; // Relacion con tipo de post
+
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+    user: User; // Guarda informacion de user
+
+    @Column() userId: number
+
 }

@@ -4,7 +4,8 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Role } from 'src/common/enums/role.enum';
+import { Tipo } from 'src/tipo/entities/tipo.entity';
 
 @Injectable()
 export class PostsService {
@@ -12,20 +13,23 @@ export class PostsService {
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
 
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Tipo) private readonly tipoRepository: Repository<Tipo>,
   ) { }
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto, user: any) {
 
-    const user = await this.userRepository.findOneBy({ id: createPostDto.user })
+    const tipo = await this.tipoRepository.findOneBy({ id: createPostDto.tipo })
+    if (!tipo) throw new BadRequestException('User not found')
 
-    if (!user) throw new BadRequestException('User not found')
-
-    return await this.postsRepository.save({ ...createPostDto, user })
+    return await this.postsRepository.save({ ...createPostDto, tipo, userId: user.userId })
   }
 
-  async findAll() {
-    return await this.postsRepository.find(); //{ relations: ['user'] }
+  async findAll(user: any) {
+    if (user.role === Role.ADMIN) return await this.postsRepository.find()
+
+    return await this.postsRepository.find({
+      where: { userId: user.userId },
+    }); //{ relations: ['user'] }
   }
 
   async findOne(id: number) {

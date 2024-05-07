@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProfileModule } from './profile/profile.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
+import { TipoModule } from './tipo/tipo.module';
 
 import * as dotenv from 'dotenv'
 
@@ -22,7 +23,7 @@ dotenv.config()
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
-        port: 5432, //ssl: true,
+        port: 5432, ssl: true,
         autoLoadEntities: true,
         synchronize: true,
       }
@@ -34,9 +35,11 @@ dotenv.config()
 
     PostsModule,
 
-    AuthModule
+    AuthModule,
+
+    TipoModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

@@ -6,10 +6,11 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { ActiveUser } from 'src/common/decorators/activeUser.decorator';
 
-
-@UseGuards(AuthGuard, RolesGuard) @Roles(Role.ADMIN)
+@UseGuards(AuthGuard, RolesGuard) @Roles(Role.USER)
 @Controller('post')
+
 export class PostsController {
 
   constructor(
@@ -17,13 +18,13 @@ export class PostsController {
   ) { }
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @ActiveUser() user: any) {
+    return this.postsService.create(createPostDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@ActiveUser() user: any) {
+    return this.postsService.findAll(user);
   }
 
   @Get(':id')

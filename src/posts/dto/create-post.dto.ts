@@ -6,6 +6,6 @@ export class CreatePostDto {
     context: string;
 
     @IsNumber()
-    user: number;
+    tipo: number;
 
 }

@@ -12,16 +12,14 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
-  async create({username, password}: CreateUserDto) {
+  async create({ username, password }: CreateUserDto) {
     const pass = await hash(password, 10)
 
-    await this.userRepository.save({
-      username: username, password: pass
-    })
-      
-    return { msg: `User ${username} created successfully`}
+    await this.userRepository.save({ username: username, password: pass })
+
+    return { msg: `User ${username} created successfully` }
   }
 
   async findAll() {
@@ -29,27 +27,27 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const userFound = await this.userRepository.findOneBy({id})
-      
-    if(!userFound) throw new BadRequestException('User not found')
-      
-    return userFound
+    const user = await this.userRepository.findOneBy({ id })
+
+    if (!user) throw new BadRequestException('User not found')
+
+    return user
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const result = await this.userRepository.update(id, updateUserDto)
-      
-    if(result.affected === 0) return { msg: 'User not updated'}
 
-    return { msg: `User ${updateUserDto.username} updated successfully`}
+    if (result.affected === 0) return { msg: 'User not updated' }
+
+    return { msg: `User updated successfully` }
   }
 
   async remove(id: number) {
     const result = await this.userRepository.delete(id)
 
-    if(result.affected === 0) return { msg: 'User not removed'}
+    if (result.affected === 0) return { msg: 'User not removed' }
 
-    return { msg: `User ${id} removed successfully`}
+    return { msg: `User removed successfully` }
   }
 
   async findOneByUsername(username: string) {

@@ -6,22 +6,19 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 @Entity({ name: 'usuario' })
 export class User {
 
-    @Column({primary: true, generated: true})
+    @Column({ primary: true, generated: true })
     id: number;
 
-    @Column({nullable: false, unique: true})
+    @Column({ nullable: false, unique: true })
     username: string;
 
-    @Column({nullable: false, select: false})
+    @Column({ nullable: false, select: false })
     password: string;
 
-    @Column({enum: Role, default: Role.USER})
+    @Column({ enum: Role, default: Role.USER })
     role: Role;
 
     @OneToOne(() => Profile, { eager: true })
     @JoinColumn()
     profile: Profile;
-
-    @OneToMany(() => Post, (post) => post.user)
-    posts: Post[];
 }

@@ -6,7 +6,7 @@
 
 and
 ---
-- nest g res person --no-spec
+* nest g res person --no-spec
 
 or
 ---
