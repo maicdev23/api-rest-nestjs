@@ -4,16 +4,17 @@ import { UsersModule } from './users/users.module';
 
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProfileModule } from './profile/profile.module';
-import { PostsModule } from './posts/posts.module';
+import { PublicacionModule } from './publicacion/publicacion.module';
 import { AuthModule } from './auth/auth.module';
-import { TipoModule } from './tipo/tipo.module';
+import { ComentarioModule } from './comentario/comentario.module';
 
-import * as dotenv from 'dotenv'
-
-dotenv.config()
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+
+    ConfigModule.forRoot({ isGlobal: true }),
+
     EstudianteModule,
 
     TypeOrmModule.forRoot(
@@ -33,13 +34,14 @@ dotenv.config()
 
     ProfileModule,
 
-    PostsModule,
+    PublicacionModule,
 
     AuthModule,
 
-    TipoModule
+    ComentarioModule
   ],
   controllers: [],
   providers: [],
 })
+
 export class AppModule { }

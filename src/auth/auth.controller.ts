@@ -6,7 +6,9 @@ import { Roles } from './decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { RolesGuard } from './guard/roles.guard';
 import { ActiveUser } from 'src/common/decorators/activeUser.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 
@@ -19,6 +21,7 @@ export class AuthController {
         return this.authService.login(loginDTO)
     }
 
+    @ApiBearerAuth()
     @Get()
     @Roles(Role.USER)
     @UseGuards(AuthGuard, RolesGuard)

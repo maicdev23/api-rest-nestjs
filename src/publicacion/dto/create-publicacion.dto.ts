@@ -1,8 +1,8 @@
 import { IsString } from "class-validator";
 
-export class CreateTipoDto {
+export class CreatePostDto {
 
     @IsString()
-    name: string
+    context: string;
 
 }

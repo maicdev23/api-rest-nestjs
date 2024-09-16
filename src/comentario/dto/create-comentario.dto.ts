@@ -1,11 +1,11 @@
 import { IsNumber, IsString } from "class-validator";
 
-export class CreatePostDto {
+export class CreateComentarioDto {
 
     @IsString()
-    context: string;
+    comentario: string;
 
     @IsNumber()
-    tipo: number;
+    post: number;
 
 }

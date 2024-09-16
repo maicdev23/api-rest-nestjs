@@ -1,11 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { hash } from 'bcrypt';
+
+import { User } from './entities/user.entity';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -14,38 +16,45 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
-  async create({ username, password }: CreateUserDto) {
-    const pass = await hash(password, 10)
+  async create(createUserDto: CreateUserDto) {
 
-    await this.userRepository.save({ username: username, password: pass })
+    const { username, password, role = Role.USER } = createUserDto;
+    const pass = await hash(password, 10);
 
-    return { msg: `User ${username} created successfully` }
+    const user = { username, password: pass, role };
+
+    await this.userRepository.save(user);
+
+    return { msg: `User ${username} created successfully` };
   }
 
   async findAll() {
     return await this.userRepository.find()
   }
 
-  async findOne(id: number) {
-    const user = await this.userRepository.findOneBy({ id })
+  async findOne(id: string, user: any) {
+    const userFound = await this.userRepository.findOneBy({ id })
 
-    if (!user) throw new BadRequestException('User not found')
+    if (!userFound) throw new BadRequestException({ message: 'User not found' })
 
-    return user
+    if (user.role !== Role.ADMIN && userFound.id !== user.userId)
+      throw new UnauthorizedException({ message: 'User unauthorized' })
+
+    return userFound
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const result = await this.userRepository.update(id, updateUserDto)
+  async update(id: string, updateUserDto: UpdateUserDto, user: any) {
+    await this.findOne(id, user);
 
-    if (result.affected === 0) return { msg: 'User not updated' }
+    await this.userRepository.update(id, updateUserDto)
 
     return { msg: `User updated successfully` }
   }
 
-  async remove(id: number) {
-    const result = await this.userRepository.delete(id)
+  async remove(id: string, user: any) {
+    await this.findOne(id, user);
 
-    if (result.affected === 0) return { msg: 'User not removed' }
+    await this.userRepository.delete(id)
 
     return { msg: `User removed successfully` }
   }

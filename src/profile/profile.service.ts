@@ -14,10 +14,10 @@ export class ProfileService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(id: number, createProfileDto: CreateProfileDto) {
+  async create(id: string, createProfileDto: CreateProfileDto) {
     const user = await this.userRepository.findOneBy({id})    
     
-    if(!user) throw new BadRequestException('Post not found')
+    if(!user) throw new BadRequestException('Profile not found')
 
     const saveProfile = await this.profileRepository.save(createProfileDto)
     user.profile = saveProfile
@@ -30,7 +30,7 @@ export class ProfileService {
     return await this.profileRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const userFound = await this.profileRepository.findOneBy({id});
       
     if(!userFound) throw new BadRequestException('Profile not found')
@@ -38,7 +38,7 @@ export class ProfileService {
     return userFound
   }
 
-  async update(id: number, updateProfileDto: UpdateProfileDto) {
+  async update(id: string, updateProfileDto: UpdateProfileDto) {
     const result = await this.profileRepository.update(id, updateProfileDto)
       
     if(result.affected === 0) return { msg: 'User profile not updated'}
@@ -46,7 +46,7 @@ export class ProfileService {
     return { msg: `User profile updated successfully`}
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const response = await this.profileRepository.delete(id)
       
     if(response.affected === 0) return { msg: 'User profile not removed' }

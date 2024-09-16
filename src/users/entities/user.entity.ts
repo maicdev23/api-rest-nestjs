@@ -1,13 +1,12 @@
 import { Role } from "src/common/enums/role.enum";
-import { Post } from "src/posts/entities/post.entity";
 import { Profile } from "src/profile/entities/profile.entity";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'usuario' })
 export class User {
 
-    @Column({ primary: true, generated: true })
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
     @Column({ nullable: false, unique: true })
     username: string;
@@ -15,7 +14,7 @@ export class User {
     @Column({ nullable: false, select: false })
     password: string;
 
-    @Column({ enum: Role, default: Role.USER })
+    @Column({ default: Role.USER })
     role: Role;
 
     @OneToOne(() => Profile, { eager: true })
