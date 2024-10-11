@@ -3,11 +3,15 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import * as cors from "cors";
+
 async function main() {
 
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api/')
+
+  app.use(cors())
 
   app.useGlobalPipes(new ValidationPipe({}))
 

@@ -1,3 +1,8 @@
+## !Import
+
+    Documentation: http://localhost:5000/api-docs
+    Api of tests: http://localhost:5000/api/person ['GET', 'POST', 'PUT', 'DELETE']
+
 ## Readme simple
 
 > nest new app-name
@@ -24,6 +29,8 @@ too
 
 !install
 ---
+> npm i class-validator class-transformer
+
 > npm i @nestjs/config    -- variables de entorno 
 
 > npm i @nestjs/swagger   -- documentacion de api

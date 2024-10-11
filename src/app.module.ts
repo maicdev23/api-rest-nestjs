@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ComentarioModule } from './comentario/comentario.module';
 
 import { ConfigModule } from '@nestjs/config';
+import { PersonModule } from './person/person.module';
 
 @Module({
   imports: [
@@ -20,11 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot(
       {
         type: 'postgres',
-        host: process.env.DB_HOST,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-        port: 5432, ssl: true,
+        url: process.env.DB_CONN,
         autoLoadEntities: true,
         synchronize: true,
       }
@@ -38,7 +35,9 @@ import { ConfigModule } from '@nestjs/config';
 
     AuthModule,
 
-    ComentarioModule
+    ComentarioModule,
+
+    PersonModule
   ],
   controllers: [],
   providers: [],

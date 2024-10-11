@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -17,15 +17,23 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto) {
-
     const { username, password, role = Role.USER } = createUserDto;
-    const pass = await hash(password, 10);
 
-    const user = { username, password: pass, role };
+    const findUser = await this.userRepository.findOne({ where: { username } });
 
-    await this.userRepository.save(user);
+    if (findUser) throw new ConflictException({ message: 'User already exists' });
 
-    return { msg: `User ${username} created successfully` };
+    try {
+      const pass = await hash(password, 10);
+
+      const user = { username, password: pass, role };
+
+      await this.userRepository.save(user);
+
+      return { msg: `User ${username} created successfully` };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async findAll() {
